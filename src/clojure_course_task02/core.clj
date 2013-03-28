@@ -1,10 +1,15 @@
 (ns clojure-course-task02.core
   (:gen-class))
 
-
+;Coudn't make it faster using parallel things, mostly because file-seq wastes 70% of the time and I don't understand yet how to compute lazy seq in parallel.
+;Attempt to recursively create futures from each subfolder was clumsy and even slower.
 (defn find-files [file-name path]
-  "TODO: Implement searching for a file using his name as a regexp."
-  nil)
+  "Searching for a file using his name as a regexp."
+  (let [regexp (re-pattern file-name)]
+  (->>  (clojure.java.io/file path)
+        (file-seq)
+        (filter #(re-matches regexp (.getName %)))
+        (map (memfn getName)))))
 
 (defn usage []
   (println "Usage: $ run.sh file_name path"))
